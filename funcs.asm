@@ -1,4 +1,5 @@
 section .data
+    ; коэффициенты в функциях
     c1 dd -2
     c2 dd 14
     c3 dd 2
@@ -17,9 +18,10 @@ section .text
         finit
 
         fld qword[ebp + 8]
-        fldln2               ; ST(0) = ln(2), ST(1) = x
-        fxch                 ; ST(0) = x, ST(1) = ln(2)
-        fyl2x
+        fldln2
+        fxch                ; st(0) = x, st(1) = ln(2)
+        fyl2x               ; st(1) * log_2(st(0))
+                            ; ln(x) = log_2(x) / log_2(e) = log_2(x) * ln(2)
         
         leave
         ret
@@ -31,10 +33,10 @@ section .text
         finit
 
         fld qword[ebp + 8]
-        fild dword[c1]
-        fmulp
-        fild dword[c2]
-        faddp
+        fild dword[c1]      ; -2
+        fmulp               ; -2x
+        fild dword[c2]      ; 14
+        faddp               ; -2x + 14
 
         leave
         ret
@@ -46,14 +48,14 @@ section .text
         finit
 
         fld qword[ebp + 8]
-        fild dword[c3]
-        fsubrp
+        fild dword[c3]      ; 2
+        fsubrp              ; 2 - x
 
         fld1
-        fdivrp
+        fdivrp              ; 1 / (2-x)
 
-        fild dword[c4]
-        faddp
+        fild dword[c4]      ; 6
+        faddp               ; 1/(2-x) + 6
 
         leave
         ret
@@ -66,7 +68,7 @@ section .text
 
         fld1
         fld qword[ebp + 8]
-        fdivp
+        fdivp               ; 1 / x
 
         leave
         ret
@@ -77,7 +79,7 @@ section .text
 
         finit
 
-        fild dword[c1]
+        fild dword[c1]      ; -2
 
         leave
         ret
@@ -89,14 +91,14 @@ section .text
         finit
 
         fld qword[ebp + 8]
-        fild dword[c3]
-        fsubrp
+        fild dword[c3]      ; 2
+        fsubrp              ; 2 - x
 
-        fst qword[buf]
-        fmul qword[buf]
+        fst qword[buf]      ; buf = 2 - x
+        fmul qword[buf]     ; (2-x)^2
 
         fld1
-        fdivrp
+        fdivrp              ; 1 / (2-x)^2
 
         leave
         ret

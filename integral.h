@@ -1,7 +1,10 @@
-double ind_integral(double, double, double, double);
+double ind_integral(double a, double b, double c, double x);
 
-double s(double, double, double, double, double, double);
+double s(double a, double b, double m, 
+    double F_a, double F_b, double F_m);
 
-double integral(double (*)(double), double, double, double, 
-double, double, double, double);
+double integral(double (*f)(double), 
+    double a, double b, double m, 
+    double F_a, double F_b, double F_m, 
+    double eps);
 

@@ -4,7 +4,7 @@
 #include "root.h"
 #include "integral.h"
 
-// Тестовые функции
+// Тестовые функции и их производные
 typedef double (*func)(double);
 
 double g1(double x) {
@@ -55,18 +55,20 @@ void test(void) {
     int i, j;
     double a, b, eps1, eps2;
     puts("Function numbers (1-5): ");
-    scanf("%d%d", &i, &j);
+    scanf("%d%d", &i, &j); // ввод номеров функций
     i--;
     j--;
     puts("Interval: ");
-    scanf("%lf %lf", &a, &b);
+    scanf("%lf %lf", &a, &b); // ввод интервала 
     puts("Eps1: ");
-    scanf("%lf", &eps1);
+    scanf("%lf", &eps1); // ввод eps1
     puts("Eps2: ");
-    scanf("%lf", &eps2);
+    scanf("%lf", &eps2); // ввод eps2
 
-    printf("Root: %lf\n", root(functions[i], functions[j], a, b, eps1, derivatives[i], derivatives[j]));
-    printf("Iterations: %d\n", iter);
+    printf("Root: %lf\n", root(functions[i], functions[j], a, b, eps1, derivatives[i], derivatives[j])); // вывод их точки пересечения
+    printf("Iterations: %d\n", iter); // вывод количества итераций
+    // вывод итеграла от первой функции на данном отрезке
     printf("Integral 1: %lf\n", integral(functions[i], a, b, (a + b) / 2, functions[i](a), functions[i](b), functions[i]((a + b) / 2), eps2));
+    // вывод интеграла от второй функции на данном отрезке
     printf("Integral 2: %lf\n", integral(functions[j], a, b, (a + b) / 2, functions[j](a), functions[j](b), functions[j]((a + b) / 2), eps2));
 }
