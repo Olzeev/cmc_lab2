@@ -2,28 +2,12 @@
 #include <math.h>
 #include <string.h>
 
-double f1(double x) {
-    return log(x);
-}
-
-double der1(double x) {
-    return 1 / x;
-}
-
-double f2(double x) {
-    return -2 * x + 14;
-}
-
-double der2(double x) {
-    return -2;
-}
-double f3(double x) {
-    return 1 / (2 - x) + 6;
-}
-
-double der3(double x) {
-    return 1 / pow(x - 2, 2);
-}
+extern double _f1(double);
+extern double _f2(double);
+extern double _f3(double);
+extern double _derf1(double);
+extern double _derf2(double);
+extern double _derf3(double);
 
 // Тестовые функции
 typedef double (*func)(double);
@@ -74,7 +58,7 @@ double root(double (*f)(double), double (*g)(double),
 {
     double mid = (a + b) / 2;
     double der1 = der_f(mid) - der_g(mid);
-    double der2 = (f(mid) - g(mid) >= (f(a) + f(b)) / 2) ? 1 : -1;
+    double der2 = (f(mid) - g(mid) >= (f(a) - g(a) + f(b) - g(b)) / 2) ? -1 : 1;
     int flag = (der1 * der2 > 0 ? 1 : 0);
 
     while (b - a >= eps) {
@@ -125,11 +109,10 @@ double integral(double (*f)(double),
     double F_m1 = f(m1);
     double F_m2 = f(m2);
     
-    iter++;
     double s1 = s(a, m, m1, F_a, F_m, F_m1);
     double s2 = s(m, b, m2, F_m, F_b, F_m2);
 
-    if (fabs(s(a, b, m, F_a, F_b, F_m) - (s1 + s2)) < eps) return s1 + s2;
+    if (fabs(s(a, b, m, F_a, F_b, F_m) - (s1 + s2)) < eps * 15) return s1 + s2;
 
     else return integral(f, a, m, m1, F_a, F_m, F_m1, eps) + integral(f, m, b, m2, F_m, F_b, F_m2, eps);
 }
@@ -176,9 +159,31 @@ int main(char argc, char *argv[]) {
             print_iter = 1;
         }
     }
+    double eps1 = 0.00001, eps2 = 0.000001, a = 2.1;
 
-    printf("%f\n", root(f1, f2, 1, 10, 0.00001, der1, der2));
-    if (iter)
-        printf("%d\n", iter);
+    double x1 = root(_f1, _f3, a, 5, eps1, _derf1, _derf3);
+    if (print_iter)
+        printf("Iterations for f1 x f3: %d\n", iter);
+    iter = 0;
+
+    double x2 = root(_f2, _f3, a, 7, eps1, _derf2, _derf3);
+    if (print_iter)
+        printf("Iterations for f2 x f3: %d\n", iter);
+    iter = 0;
+
+    double x3 = root(_f1, _f2, a, 7, eps1, _derf1, _derf2);
+    if (print_iter)
+        printf("Iterations for f1 x f2: %d\n", iter);
+    iter = 0;
+
+    if (print_roots) 
+        printf("Roots: \nf1 x f2: %lf\nf2 x f3: %lf\nf1 x f3: %lf\n", x3, x2, x1);
+    
+
+    double s1 = integral(_f3, x1, x2, (x1 + x2) / 2, _f3(x1), _f3(x2), _f3((x1 + x2) / 2), eps2);
+    double s2 = integral(_f2, x2, x3, (x2 + x3) / 2, _f2(x2), _f2(x3), _f2((x2 + x3) / 2), eps2);
+    double s3 = integral(_f1, x1, x3, (x1 + x3) / 2, _f1(x1), _f1(x3), _f1((x1 + x3) / 2), eps2);
+    double s_ans = s1 + s2 - s3;
+    printf("Square: %lf\n", s_ans);
     
 }

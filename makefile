@@ -1,8 +1,8 @@
-all: main.c
-	gcc main.c -o main.exe -lm
+all: main.c funcs.o
+	gcc -m32 main.c funcs.o -o program.exe -lm
 
-run: build
-	./main.exe
-
+funcs.o:
+	nasm -f elf32 funcs.asm -o funcs.o 
+	
 clean:
-	rm main.exe
+	rm funcs.o
