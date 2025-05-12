@@ -1,2 +1,5 @@
 program.exe
 funcs.o
+integral.o
+root.o
+test.o
