@@ -30,19 +30,19 @@ int main(char argc, char *argv[]) {
             print_iter = 1;
         }
     }
-    double eps1 = 0.00001, eps2 = 0.000001, a = 2.1;
+    double eps1 = 0.00008, eps2 = 0.00008;
 
-    double x1 = root(_f1, _f3, a, 5, eps1, _derf1, _derf3); // поиск левой точки пересечения
+    double x1 = root(_f1, _f3, 2.1, 3, eps1, _derf1, _derf3); // поиск левой точки пересечения
     if (print_iter)
         printf("Iterations for f1 x f3: %d\n", iter);
     iter = 0;
 
-    double x2 = root(_f2, _f3, a, 7, eps1, _derf2, _derf3); // поиск средней точки пересечения
+    double x2 = root(_f2, _f3, 4, 5, eps1, _derf2, _derf3); // поиск средней точки пересечения
     if (print_iter)
         printf("Iterations for f2 x f3: %d\n", iter);
     iter = 0;
 
-    double x3 = root(_f1, _f2, a, 7, eps1, _derf1, _derf2); // поиск правой точки пересечения
+    double x3 = root(_f1, _f2, 6, 7, eps1, _derf1, _derf2); // поиск правой точки пересечения
     if (print_iter)
         printf("Iterations for f1 x f2: %d\n", iter);
     iter = 0;
@@ -51,9 +51,9 @@ int main(char argc, char *argv[]) {
         printf("Roots: \nf1 x f2: %lf\nf2 x f3: %lf\nf1 x f3: %lf\n", x3, x2, x1); // вывод точек пересечения
     
 
-    double s1 = integral(_f3, x1, x2, (x1 + x2) / 2, _f3(x1), _f3(x2), _f3((x1 + x2) / 2), eps2); // площадь под y=1/(2-x)+6
-    double s2 = integral(_f2, x2, x3, (x2 + x3) / 2, _f2(x2), _f2(x3), _f2((x2 + x3) / 2), eps2); // площадь под y=-2x+14
-    double s3 = integral(_f1, x1, x3, (x1 + x3) / 2, _f1(x1), _f1(x3), _f1((x1 + x3) / 2), eps2); // площадь под y=ln(x)
+    double s1 = integral(_f3, x1, x2, eps2); // площадь под y=1/(2-x)+6
+    double s2 = integral(_f2, x2, x3, eps2); // площадь под y=-2x+14
+    double s3 = integral(_f1, x1, x3, eps2); // площадь под y=ln(x)
     double s_ans = s1 + s2 - s3; // итоговая площадь фигуры
     printf("Square: %lf\n", s_ans);
     
